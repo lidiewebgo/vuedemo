@@ -33,6 +33,7 @@ const mutations = {
   
   const actions = {
     setTag: ({ commit }, payload) => {
+        console.log("123")
       commit(types.SET_TAG, payload)
     },
     closeTag: ({ commit }, payload) => {
