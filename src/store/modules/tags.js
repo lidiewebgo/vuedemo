@@ -3,8 +3,8 @@ import * as types from './mutation-types';
 const state = {
     tagList: [
         {
-            path: '/home',
-            name: 'home',
+            path: '/',
+            name: 'Dashboard',
             label: '首页'
         }
     ]

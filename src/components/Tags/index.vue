@@ -44,6 +44,7 @@
 
 <script>
 import { mapState } from "vuex";
+import elementResizeDetectorMaker from "element-resize-detector";
 export default {
   data() {
     return {
@@ -66,6 +67,20 @@ export default {
         this.contextMenuVisible = false;
       }
     });
+
+    this.len = this.tags.length;
+    this.tagsWidth = this.$refs.tags.offsetWidth;
+    const erd = elementResizeDetectorMaker();
+    erd.listenTo(this.$refs.outBox, (ele) => {
+      this.$nextTick(() => {
+        this.tagsBoxWidth = ele.offsetWidth;
+        if (this.tagsBoxWidth >= this.tagsWidth) {
+          this.arrowVisible = true;
+        } else {
+          this.arrowVisible = false;
+        }
+      });
+    });
   },
   computed: {
     ...mapState({
@@ -74,6 +89,9 @@ export default {
   },
 
   methods: {
+    refresh() {
+      this.$router.go(0);
+    },
     handleClickContextMenu(event) {
       const e = event || window.event;
       const target = e.target;
@@ -84,9 +102,82 @@ export default {
 
       this.tag = this.tags[this.tagIndex]; // 当前右击的菜单信息
     },
-    
+    /**
+     * 参数说明
+     * tag 当前右击的标签所存的对象
+     * index 当前右击标签的索引
+     * delCount 删除个数，默认删除1个
+     * isCloseOther 是否删除其他 默认不是
+     */
+    handleTagClose(tag, index, delCount = 1, isCloseOther = false) {
+      const length = this.tags.length - 1;
+      const payload = {
+        index,
+        delCount,
+        isCloseOther,
+      };
+
+      // 执行存标签
+      this.$store.dispatch("menuTag/closeTag", payload);
+
+      // 点击关闭其他，并且不是当前所在的页面
+      if (tag.name !== this.$route.name && isCloseOther) {
+        this.$router.push({ name: tag.name });
+        return;
+      }
+
+      // 右击的标签正是当前打开的页面并且不是最后一个
+      if (tag.name === this.$route.name && index < this.tags.length - 1) {
+        this.$router.push({ name: this.tags[index + 1].name });
+      }
+
+      // 关闭的标签是最右边的话，往左边跳转一个
+      if (index === length && !isCloseOther) {
+        this.$router.push({ name: this.tags[index - 1].name });
+        return;
+      }
+      if (index <= length && !isCloseOther) {
+        // 否则往右边跳转
+        if (index !== 1) this.$router.push({ name: this.tags[index].name });
+      }
+    },
+    closeTag() {
+      if (this.tags.length === 1) return;
+      this.handleTagClose(this.tag, this.tagIndex);
+    },
+    closeOtherTag() {
+      if (this.tags.length === 2) return;
+      if (this.tagIndex === 1) {
+        this.handleTagClose(
+          this.tag,
+          this.tagIndex + 1,
+          this.tags.length,
+          true
+        );
+        return;
+      }
+
+      this.handleTagClose(this.tag, 1, this.tagIndex - 1, true);
+      this.handleTagClose(this.tag, this.tagIndex, this.tags.length, true);
+    },
+    closeAllTag() {
+      if (this.tags.length === 1) return;
+      this.handleTagClose(this.tag, 1, this.tags.length);
+      this.$router.push({ name: "home" });
+    },
+    handleClickToLeft() {
+      this.left = 0;
+    },
+    handleClickToLeft() {
+      this.left = this.tagsWidth - this.tagsBoxWidth - 30;
+    },
+    handleTagClick(e, tag){
+        console.group("---")
+        console.log(e)
+        console.log(tag.path)
+        this.$router.push({path:`${tag.path}`})
+    }
   },
-  
 };
 </script>
 
