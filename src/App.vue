@@ -1,13 +1,23 @@
 <template>
   <div id="app">
-    <router-view />
+    <router-view @click="key" />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App',
-  mounted(){
+  name: "App",
+  computed: {
+    key() {
+      const tag = {};
+      tag.label = this.$route.meta.label;
+      tag.name = this.$route.name;
+      tag.path = this.$route.path;
+      this.$store.dispatch("tags/setTag", tag);
+      return this.$route.path;
+    },
+  },
+  mounted() {
     //  window.addEventListener("click", (e) => {
     //   const target = e.target;
     //   if (target.nodeName !== "SPAN") {
@@ -15,6 +25,6 @@ export default {
     //     this.contextMenuVisible = false;
     //   }
     // });
-  }
-}
+  },
+};
 </script>

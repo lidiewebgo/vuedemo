@@ -12,7 +12,7 @@
             :icon="onlyOneChild.meta.icon||(item.meta&&item.meta.icon)"
             :title="onlyOneChild.meta.title"
           />
-        </el-menu-item>
+        </el-menu-item>     
       </app-link>
     </template>
 
@@ -50,7 +50,7 @@ export default {
       required: true,
     },
     isNest: {
-      type: Boolean,
+      type: Boolean,      
       default: false,
     },
     basePath: {
@@ -65,14 +65,7 @@ export default {
     return {};
   },
   computed: {
-    key() {
-      const tag = {};
-      tag.label = this.$route.meta.label;
-      tag.name = this.$route.name;
-      tag.path = this.$route.path;
-      this.$store.dispatch("tags/setTag", tag);
-      return this.$route.path;
-    },
+
   },
   methods: {
     hasOneShowingChild(children = [], parent) {

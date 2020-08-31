@@ -15,6 +15,7 @@
         :style="{'padding-left': arrowVisible ? '30px' : '0', left: `${left}px`}"
       >
         <el-tag
+          style="width:600px"
           ref="tag"
           size="small"
           v-for="(tag, i) in tags"
@@ -99,7 +100,6 @@ export default {
       this.menuTop = e.layerY + 20 + "px"; // 菜单出现的位置距离顶部的距离
       this.tagIndex = Number(target.getAttribute("data-index")); // 获取当前右击菜单的索引。从0开始
       this.contextMenuVisible = true; // 显示菜单
-
       this.tag = this.tags[this.tagIndex]; // 当前右击的菜单信息
     },
     /**
@@ -118,7 +118,7 @@ export default {
       };
 
       // 执行存标签
-      this.$store.dispatch("menuTag/closeTag", payload);
+      this.$store.dispatch("tags/closeTag", payload);
 
       // 点击关闭其他，并且不是当前所在的页面
       if (tag.name !== this.$route.name && isCloseOther) {
@@ -171,12 +171,18 @@ export default {
     handleClickToLeft() {
       this.left = this.tagsWidth - this.tagsBoxWidth - 30;
     },
-    handleTagClick(e, tag){
-        console.group("---")
-        console.log(e)
-        console.log(tag.path)
-        this.$router.push({path:`${tag.path}`})
-    }
+    handleTagClick(e, tag) {
+      console.group("---");
+      console.log(e);
+      console.log(tag.path);
+      this.$router.push({ path: `${tag.path}` });
+    },
+    handleClickToLeft() {
+      this.left = 0;
+    },
+    handleClickToRight() {
+      this.left = this.tagsWidth - this.tagsBoxWidth - 30;
+    },
   },
 };
 </script>
