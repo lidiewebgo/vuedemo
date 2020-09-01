@@ -51,7 +51,7 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard', label: '首页' }
+      meta: { title: '首页', icon: 'dashboard', label: '首页' }
     }]
   },
 
@@ -60,19 +60,19 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/example/table',
     name: 'Example',
-    meta: { title: 'Example', icon: 'el-icon-s-help',label: 'Example' },
+    meta: { title: '菜单一', icon: 'el-icon-s-help',label: '菜单一' },
     children: [
       {
         path: 'table',
         name: 'Table',
         component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table',label: 'Table' }
+        meta: { title: '菜单1-1', icon: 'table',label: '菜单1-1' }
       },
       {
         path: 'tree',
         name: 'Tree',
         component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree',label: 'Tree' }
+        meta: { title: '菜单1-2', icon: 'tree',label: '菜单1-2' }
       }
     ]
   },
@@ -85,7 +85,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'Form',
         component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form',label: 'Form'  }
+        meta: { title: '菜单二', icon: 'form',label: '菜单二' }
       }
     ]
   },
@@ -96,39 +96,40 @@ export const constantRoutes = [
     redirect: '/nested/menu1',
     name: 'Nested',
     meta: {
-      title: 'Nested',
+      title: '菜单三',
       icon: 'nested',
+      label: '菜单三'
     },
     children: [
       {
         path: 'menu1',
         component: () => import('@/views/nested/menu1/index'), // Parent router-view
         name: 'Menu1',
-        meta: { title: 'Menu1',label: 'Menu1'  },
+        meta: { title: '测试菜单1',label: '测试菜单1'  },
         children: [
           {
             path: 'menu1-1',
             component: () => import('@/views/nested/menu1/menu1-1'),
             name: 'Menu1-1',
-            meta: { title: 'Menu1-1',label: 'Menu1-1'}
+            meta: { title: '测试菜单1-1',label: '测试菜单1-1'}
           },
           {
             path: 'menu1-2',
             component: () => import('@/views/nested/menu1/menu1-2'),
             name: 'Menu1-2',
-            meta: { title: 'Menu1-2',label: 'Menu1-2' },
+            meta: { title: '测试菜单1-2',label: '测试菜单1-2' },
             children: [
               {
                 path: 'menu1-2-1',
                 component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
                 name: 'Menu1-2-1',
-                meta: { title: 'Menu1-2-1' }
+                meta: { title: '测试菜单1-2-1',label: '测试菜单1-2-1'}
               },
               {
                 path: 'menu1-2-2',
                 component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
                 name: 'Menu1-2-2',
-                meta: { title: 'Menu1-2-2' }
+                meta: { title: '测试菜单1-2-2',label: '测试菜单1-2-2'}
               }
             ]
           },
@@ -136,29 +137,29 @@ export const constantRoutes = [
             path: 'menu1-3',
             component: () => import('@/views/nested/menu1/menu1-3'),
             name: 'Menu1-3',
-            meta: { title: 'Menu1-3' }
+            meta: { title: '测试菜单1-3',label: '测试菜单1-3'}
           }
         ]
       },
-      {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        name: 'Menu2',
-        meta: { title: 'menu2' }
-      }
+      // {
+      //   path: 'menu2',
+      //   component: () => import('@/views/nested/menu2/index'),
+      //   name: 'Menu2',
+      //   meta: { title: 'menu2' }
+      // }
     ]
   },
 
-  {
-    path: 'external-link',
-    component: Layout,
-    children: [
-      {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
-      }
-    ]
-  },
+  // {
+  //   path: 'external-link',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
+  //       meta: { title: 'External Link', icon: 'link' }
+  //     }
+  //   ]
+  // },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }

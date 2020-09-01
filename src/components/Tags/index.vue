@@ -1,51 +1,55 @@
 <template>
-  <div
-    class="tags"
-    @contextmenu.prevent
-    ref="tags"
-    :style="{'padding': arrowVisible ? '12px 0' : '12px 10px'}"
-  >
-    <div class="tags-out-box" ref="outBox">
-      <div class="svg arrow" v-if="arrowVisible" @click="handleClickToLeft">
-        <svg-icon icon-class="arrow-left" />
+  <div class="tagsInner">
+    <span @click="handleClickToLeft">左</span>
+    <div
+      class="tags"
+      @contextmenu.prevent
+      ref="tags"
+      :style="{'padding': arrowVisible ? '12px 0' : '12px 10px'}"
+    >
+      <div class="tags-out-box" ref="outBox">
+        <div class="svg arrow" v-if="arrowVisible" @click="handleClickToLeft">
+          <svg-icon icon-class="arrow-left" />
+        </div>
+        <div
+          class="tags-box"
+          ref="box"
+          :style="{'padding-left': arrowVisible ? '30px' : '0', left: `${left}px`}"
+        >
+          <el-tag
+            style="width:400px"
+            ref="tag"
+            size="small"
+            v-for="(tag, i) in tags"
+            :data-index="i"
+            :data-id="tag.menuId"
+            :key="tag.name"
+            :closable="tag.name !== 'home'"
+            :effect="$route.name === tag.name ? 'dark' : 'plain'"
+            @contextmenu.native.prevent="handleClickContextMenu($event)"
+            @click="handleTagClick($event, tag)"
+            @close="handleTagClose(tag, i)"
+          >{{tag.label}}</el-tag>
+        </div>
+        <div class="svg arrow arrow-right" v-if="arrowVisible" @click="handleClickToRight">
+          <svg-icon icon-class="arrow-right" />
+        </div>
       </div>
-      <div
-        class="tags-box"
-        ref="box"
-        :style="{'padding-left': arrowVisible ? '30px' : '0', left: `${left}px`}"
-      >
-        <el-tag
-          style="width:600px"
-          ref="tag"
-          size="small"
-          v-for="(tag, i) in tags"
-          :data-index="i"
-          :data-id="tag.menuId"
-          :key="tag.name"
-          :closable="tag.name !== 'home'"
-          :effect="$route.name === tag.name ? 'dark' : 'plain'"
-          @contextmenu.native.prevent="handleClickContextMenu($event)"
-          @click="handleTagClick($event, tag)"
-          @close="handleTagClose(tag, i)"
-        >{{tag.label}}</el-tag>
-      </div>
-      <div class="svg arrow arrow-right" v-if="arrowVisible" @click="handleClickToRight">
-        <svg-icon icon-class="arrow-right" />
-      </div>
-    </div>
 
-    <ul class="right-menu" :style="{left: menuLeft, top: menuTop}" v-show="contextMenuVisible">
-      <a href="javascript:;" @click="refresh">刷新</a>
-      <a href="javascript:;" @click="closeTag" v-if="tagIndex !== 0">关闭</a>
-      <a href="javascript:;" @click="closeOtherTag" v-if="tagIndex !== 0">关闭其它</a>
-      <a href="javascript:;" @click="closeAllTag">关闭所有</a>
-    </ul>
+      <ul class="right-menu" :style="{left: menuLeft, top: menuTop}" v-show="contextMenuVisible">
+        <a href="javascript:;" @click="refresh">刷新</a>
+        <a href="javascript:;" @click="closeTag" v-if="tagIndex !== 0">关闭</a>
+        <a href="javascript:;" @click="closeOtherTag" v-if="tagIndex !== 0">关闭其它</a>
+        <a href="javascript:;" @click="closeAllTag">关闭所有</a>
+      </ul>
+    </div>
+    <span @click="handleClickToRight">右</span>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import elementResizeDetectorMaker from "element-resize-detector";
+
 export default {
   data() {
     return {
@@ -67,20 +71,6 @@ export default {
         // 只要点击的不是el-tag就可以关闭，因为el-tag是用span标签实现的
         this.contextMenuVisible = false;
       }
-    });
-
-    this.len = this.tags.length;
-    this.tagsWidth = this.$refs.tags.offsetWidth;
-    const erd = elementResizeDetectorMaker();
-    erd.listenTo(this.$refs.outBox, (ele) => {
-      this.$nextTick(() => {
-        this.tagsBoxWidth = ele.offsetWidth;
-        if (this.tagsBoxWidth >= this.tagsWidth) {
-          this.arrowVisible = true;
-        } else {
-          this.arrowVisible = false;
-        }
-      });
     });
   },
   computed: {
@@ -165,12 +155,7 @@ export default {
       this.handleTagClose(this.tag, 1, this.tags.length);
       this.$router.push({ name: "home" });
     },
-    handleClickToLeft() {
-      this.left = 0;
-    },
-    handleClickToLeft() {
-      this.left = this.tagsWidth - this.tagsBoxWidth - 30;
-    },
+ 
     handleTagClick(e, tag) {
       console.group("---");
       console.log(e);
@@ -179,21 +164,32 @@ export default {
     },
     handleClickToLeft() {
       this.left = 0;
+      console.log(this.$refs.outBox.offsetWidth)
     },
     handleClickToRight() {
-      this.left = this.tagsWidth - this.tagsBoxWidth - 30;
+      // this.left = this.$refs.outBox.offsetWidth - this.$refs.tags.offsetWidth- 30;
+      this.left =this.$refs.tags.offsetWidth - this.$refs.outBox.offsetWidth - 30;
+       console.log(this.tagsBoxWidth)
+      console.log(this.tagsWidth)
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+.tagsInner {
+  display: flex;
+  span {
+    align-self: center;
+  }
+}
 // tag组件样式
 .tags {
   width: 100%;
   white-space: nowrap;
   background-color: blue;
   padding: 12px 10px;
+  overflow: hidden;
   &-out-box {
     display: inline-block;
     position: relative;
